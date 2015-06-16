@@ -97,6 +97,15 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
         self.videoPreviewContainsFrameView?.addSubview(self.videoPreviewLineAnimationFrameView!)
         self.videoPreviewLineAnimation()
         var time:NSTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2.0), target: self, selector: "repetitionScanAnimation", userInfo: nil, repeats: true)
+
+        let reminder = UILabel(frame: CGRectMake(0, MOKHeight-80, MOKWidth, 40))
+        reminder.textAlignment = NSTextAlignment.Center
+        reminder.textColor = MOKSnow
+        reminder.text = "对准要扫描的条码"
+        reminder.font = UIFont.systemFontOfSize(25.0)
+        self.view.addSubview(reminder)
+        self.view.bringSubviewToFront(reminder)
+
     }
     
     func videoPreviewLineAnimation()->Void{
