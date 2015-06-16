@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vDK-yJ-fgq">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <scenes>
+        <!--Mockingbird Scan Code Manager-->
+        <scene sceneID="fpg-c3-qao">
+            <objects>
+                <viewController id="ASz-Gy-ae8" customClass="MockingbirdScanCodeManager" customModule="Mockingbird" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ivz-dx-TfW"/>
+                        <viewControllerLayoutGuide type="bottom" id="wvR-3O-vwf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ebQ-kN-6y6">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="eJA-ht-ela">
+                        <barButtonItem key="rightBarButtonItem" image="CloseModalImage" id="wmv-D6-tOM">
+                            <connections>
+                                <action selector="cancel:" destination="ASz-Gy-ae8" id="iyO-Y1-rvD"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="r7U-Rh-mOL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1262" y="476"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="KMz-SJ-B4W">
+            <objects>
+                <navigationController storyboardIdentifier="MockingbirdNavigationID" automaticallyAdjustsScrollViewInsets="NO" id="vDK-yJ-fgq" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="26K-ua-VdZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="ASz-Gy-ae8" kind="relationship" relationship="rootViewController" id="CdD-fA-Qvw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0wk-7m-8kM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="450" y="476"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="CloseModalImage" width="32" height="32"/>
+    </resources>
+</document>
