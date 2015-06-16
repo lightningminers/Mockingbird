@@ -15,7 +15,17 @@
                     <view key="view" contentMode="scaleToFill" id="ebQ-kN-6y6">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="rQV-qf-AQA">
+                                <rect key="frame" x="282" y="306" width="37" height="37"/>
+                                <color key="color" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="rQV-qf-AQA" secondAttribute="centerY" constant="-24.5" id="IT2-N8-mOw"/>
+                            <constraint firstAttribute="centerX" secondItem="rQV-qf-AQA" secondAttribute="centerX" constant="-0.5" id="pdk-1t-7vY"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="eJA-ht-ela">
@@ -25,6 +35,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="loadLine" destination="rQV-qf-AQA" id="qr5-71-dl9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r7U-Rh-mOL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

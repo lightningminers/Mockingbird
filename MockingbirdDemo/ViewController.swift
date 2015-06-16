@@ -35,6 +35,13 @@ class ViewController: UIViewController {
         let mockingbird:MockingbirdScanCodeManager = navC.topViewController as! MockingbirdScanCodeManager
         mockingbird.globalTitle = "扫描条码"
         mockingbird.globalColor = MOKTeal
+        mockingbird.mockingbirdResult = {(value:String?)->Void in
+            println(value)
+            println("回调函数")
+            if let _value = value{
+                self.scancode.text = _value
+            }
+        }
         self.presentViewController(navC, animated: true, completion: nil)
     }
 }

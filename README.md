@@ -34,6 +34,18 @@
 
 scan code result | 通过通知来获取扫描的结果
 
+##OR Callback Func
+
+scan code result | 或者通过回调函数
+
+	mockingbird.mockingbirdResult = {(value:String?)->Void in
+       println(value)
+       println("回调函数")
+       if let _value = value{
+           self.scancode.text = _value
+       }
+    }
+
 ##License
 
 This code is distributed under the terms and conditions of the MIT license.

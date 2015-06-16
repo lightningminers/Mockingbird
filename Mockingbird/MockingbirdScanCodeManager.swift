@@ -11,6 +11,7 @@ import UIKit
 import AVFoundation
 
 class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjectsDelegate{
+    @IBOutlet weak var loadLine: UIActivityIndicatorView!
     
     var captureSession:AVCaptureSession?
     var globalColor:UIColor?
@@ -21,31 +22,47 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
     var videoPreviewLineAnimationFrameView:UIView?
     var videoPreviewContainsFrameView:UIView?
     
+    var mockingbirdResult:((value:String?)->Void)?
+    
+    private var isReading:Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         self.navigationItem.title = self.globalTitle == nil ? "扫描条码" : self.globalTitle
+        let reminder = UILabel(frame: CGRectMake(0, MOKHeight-80, MOKWidth, 40))
+        reminder.textAlignment = NSTextAlignment.Center
+        reminder.textColor = MOKSnow
+        reminder.text = "对准要扫描的条码"
+        reminder.font = UIFont.systemFontOfSize(25.0)
+        self.view.addSubview(reminder)
+        self.view.bringSubviewToFront(reminder)
         self.handlerViewColor()
-        let captureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-        var error:NSError?
-        let input:AnyObject! = AVCaptureDeviceInput.deviceInputWithDevice(captureDevice, error: &error)
-        if error != nil{
-            println("\( error?.localizedDescription)")
-        }else{
-            self.captureSession = AVCaptureSession()
-            self.captureSession?.addInput(input as! AVCaptureInput)
-            let captureMetadataOutput = AVCaptureMetadataOutput()
-            self.captureSession?.addOutput(captureMetadataOutput)
-            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue())
-            captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeEAN13Code,AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code,AVMetadataObjectTypeQRCode]
-            self.videoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-            self.videoPreviewLayer?.videoGravity = AVLayerVideoGravityResizeAspect
-            self.videoPreviewLayer?.frame = self.view.bounds
-            self.view.layer.addSublayer(self.videoPreviewLayer)
-            self.captureSession?.startRunning()
-            self.createUIView()
-            println("scan code init")
-        }
+        // Do any additional setup after loading the view, typically from a nib.
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+            let captureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+            var error:NSError?
+            let input:AnyObject! = AVCaptureDeviceInput.deviceInputWithDevice(captureDevice, error: &error)
+            if error != nil{
+                println("\( error?.localizedDescription)")
+            }else{
+                self.captureSession = AVCaptureSession()
+                self.captureSession?.addInput(input as! AVCaptureInput)
+                let captureMetadataOutput = AVCaptureMetadataOutput()
+                self.captureSession?.addOutput(captureMetadataOutput)
+                captureMetadataOutput.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue())
+                captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeEAN13Code,AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code,AVMetadataObjectTypeQRCode]
+                println("scan code init")
+            }
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.loadLine.hidden = true
+                self.videoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+                self.videoPreviewLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+                self.videoPreviewLayer?.frame = self.view.bounds
+                self.view.layer.addSublayer(self.videoPreviewLayer)
+                self.createUIView()
+                self.captureSession?.startRunning()
+            })
+        })
     }
     
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
@@ -54,20 +71,17 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
             println("No QR code is detected")
             return
         }
-        let metadata = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        if  metadata.type == AVMetadataObjectTypeQRCode{
+        self.dismissViewControllerAnimated(true, completion: nil)
+        if !self.isReading{
+            self.isReading = true
+            let metadata = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
             let barCode = self.videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadata) as! AVMetadataMachineReadableCodeObject
             self.videoPreviewContainsFrameView?.frame = barCode.bounds
-            if metadata.stringValue != nil{
-                println(metadata.stringValue)
+            if self.mockingbirdResult != nil{
+                self.mockingbirdResult?(value: metadata.stringValue)
+            }else{
                 NSNotificationCenter.defaultCenter().postNotificationName(MOKNotifiScanResult, object: nil, userInfo: ["value":metadata.stringValue])
-                self.dismissViewControllerAnimated(true, completion: nil)
             }
-        }else{
-            let barCode = self.videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadata) as! AVMetadataMachineReadableCodeObject
-            self.videoPreviewContainsFrameView?.frame = barCode.bounds
-            NSNotificationCenter.defaultCenter().postNotificationName(MOKNotifiScanResult, object: nil, userInfo: ["value":metadata.stringValue])
-            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
     
@@ -83,13 +97,6 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
         self.videoPreviewContainsFrameView?.addSubview(self.videoPreviewLineAnimationFrameView!)
         self.videoPreviewLineAnimation()
         var time:NSTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2.0), target: self, selector: "repetitionScanAnimation", userInfo: nil, repeats: true)
-        let reminder = UILabel(frame: CGRectMake(0, MOKHeight-80, MOKWidth, 40))
-        reminder.textAlignment = NSTextAlignment.Center
-        reminder.textColor = MOKSnow
-        reminder.text = "对准要扫描的条码"
-        reminder.font = UIFont.systemFontOfSize(25.0)
-        self.view.addSubview(reminder)
-        self.view.bringSubviewToFront(reminder)
     }
     
     func videoPreviewLineAnimation()->Void{
@@ -107,6 +114,7 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
     private func handlerViewColor()->Void{
         if let color = self.globalColor{
            self.navigationController?.navigationBar.barTintColor = color
+           self.loadLine.color = color
         }
     }
     
