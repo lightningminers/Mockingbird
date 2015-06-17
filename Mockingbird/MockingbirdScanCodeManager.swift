@@ -61,6 +61,7 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
                 self.view.layer.addSublayer(self.videoPreviewLayer)
                 self.createUIView()
                 self.captureSession?.startRunning()
+                reminder.removeFromSuperview()
             })
         })
     }
@@ -91,13 +92,12 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
         self.videoPreviewContainsFrameView?.layer.borderWidth = 1
         self.view.addSubview(self.videoPreviewContainsFrameView!)
         self.view.bringSubviewToFront(self.videoPreviewContainsFrameView!)
-        self.videoPreviewLineAnimationFrameView = UIView(frame: CGRectMake(0, 0, MOKWidth/2, 1))
+        self.videoPreviewLineAnimationFrameView = UIView(frame: CGRectMake(0,0, MOKWidth/2, 1))
         self.videoPreviewLineAnimationFrameView?.layer.borderWidth = 1
         self.videoPreviewLineAnimationFrameView?.layer.borderColor = self.previewLineColor == nil ? MOKSnow.CGColor : self.previewLineColor?.CGColor
         self.videoPreviewContainsFrameView?.addSubview(self.videoPreviewLineAnimationFrameView!)
         self.videoPreviewLineAnimation()
         var time:NSTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2.0), target: self, selector: "repetitionScanAnimation", userInfo: nil, repeats: true)
-
         let reminder = UILabel(frame: CGRectMake(0, MOKHeight-80, MOKWidth, 40))
         reminder.textAlignment = NSTextAlignment.Center
         reminder.textColor = MOKSnow
@@ -105,14 +105,13 @@ class MockingbirdScanCodeManager:UIViewController,AVCaptureMetadataOutputObjects
         reminder.font = UIFont.systemFontOfSize(25.0)
         self.view.addSubview(reminder)
         self.view.bringSubviewToFront(reminder)
-
     }
     
     func videoPreviewLineAnimation()->Void{
         let animation = CABasicAnimation(keyPath: "MOK")
         animation.duration = 2.0
         animation.keyPath = "position.y"
-        animation.toValue = 200-1
+        animation.toValue = 200
         self.videoPreviewLineAnimationFrameView?.layer.addAnimation(animation, forKey: "MOK")
     }
     
