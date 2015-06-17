@@ -52,6 +52,18 @@ scan code result | 或者通过回调函数
 
 [how learning used AVFoundation to create scan code | 利用AVFoundation实现扫描条码](http://lcepy.github.io/2015/06/16/%E5%88%A9%E7%94%A8AVFoundation%E5%AE%9E%E7%8E%B0%E6%89%AB%E6%8F%8F%E6%9D%A1%E7%A0%81/)
 
+##OC
+
+create bridging header file and set module Yes,then you import product name -Swift.h file
+
+	UIStoryboard *stor = [UIStoryboard storyboardWithName:@"Mockingbird" bundle:[NSBundle mainBundle]];
+    UINavigationController *navc =  [stor instantiateViewControllerWithIdentifier:@"MockingbirdNavigationID"];
+    MockingbirdScanCodeManager *mocking = (MockingbirdScanCodeManager *)navc.topViewController;
+    mocking.mockingbirdResult = ^(NSString * __nonnull value){
+        self.showScanCodeInfo.text = value;
+    };
+    [self presentViewController:navc animated:YES completion:nil];
+
 ##License
 
 This code is distributed under the terms and conditions of the MIT license.
